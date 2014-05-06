@@ -6,6 +6,7 @@ made by ZLove
 import zipfile
 import os
 import csv
+import logging
 
 def UpackZip(zip_path):
      #设置解压文件夹路径
@@ -55,15 +56,31 @@ def CSVToDatabase(database_name):
 def WriteCSV(file_abspath,csvfile_name):
     file_obj = open(file_abspath,'r')
     csvfile = open(csvfile_name, 'a')
+    #log_name = os.path.splitext(csvfile_name)[0]+'.log'
+    #logger = logging.getLogger('csvlog')  
+    #logger.setLevel(logging.DEBUG)  
+    #fh = logging.FileHandler(log_name)
+    #fh.setLevel(logging.DEBUG)
+    #formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+    #fh.setFormatter(formatter)
+    #logger.addHandler(fh)
     writer = csv.writer(csvfile)
+    dataxlist =[]
     for filelog in file_obj:
         datalist = []
         filelog = filelog.strip('\n').split(',')
+        #rint filelog
         for datastr in filelog:
             index = datastr.find(':')
             data = datastr[index+1:]
             datalist.append(data.decode('gbk').encode('utf8'))
-        writer.writerow(datalist)
+        dataxlist.append(datalist)
+        if len(dataxlist)==1000:
+            writer.writerows(dataxlist)
+            dataxlist =[]
+    writer.writerows(dataxlist)
+        #writer.writerow(datalist)
+        #logger.info(datalist)
     csvfile.close()
     file_obj.close()
         
@@ -111,20 +128,23 @@ def findCSV(zip_path):
 if __name__ == '__main__':
     file_name = '20140330'
     #zipdir_path = 'C:\Users\ZLove\Desktop\zipfiles'
-    zip_path = 'C:\\Users\\ZLove\\Desktop\\zipfiles\\20140330.zip'
+    zip_path = 'C:\\Users\\ZLove\\Desktop\\zipfiles\\qiyuan_bak_2014_04_18_09_30_01'
     #print zipdir_path1
-    zipdir_path2 = zip_path.split('\\')
-    zipdir_path3 = os.path.splitext(zip_path)[0].split('\\')
-    print zipdir_path3
-    file_name = zipdir_path2[-1]
-    print zipdir_path2
-    print file_name
+##    zipdir_path2 = zip_path.split('\\')
+##    zipdir_path3 = os.path.splitext(zip_path)[0].split('\\')
+##    print zipdir_path3
+##    file_name = zipdir_path2[-1]
+##    print zipdir_path2
+##    print file_name
     #UpackZip(zip_path)
     #TakeTheDate(file_name,zipdir_path)
 ##    ExecuteSql(zipdir_path)
     #rootpath = zipdir_path +'\\'+ file_name
     #print rootpath
+    import time
+    s=time.time()
     ChangeLogToCSV(zip_path)
+    print 'Total:',time.time()-s
     #tablename = 'game_account'
     #DumpTable(tablename,rootpath)
     

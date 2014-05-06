@@ -118,6 +118,8 @@ if __name__ == '__main__':
     if files ==[]:
         print '没有文件文件'
     else:
+        import time
+        s = time.time()
         for filex in files:
             if os.path.splitext(filex)[-1] == '.zip':
                 match = re.search('_',filex)
@@ -126,10 +128,10 @@ if __name__ == '__main__':
                 zip_path = os.path.join(local_dir,filex)
                 print zip_path
                 print u'开始解压...'
-                #upackZip.UpackZip(zip_path)
+                upackZip.UpackZip(zip_path)
                 print u'解压完毕'
                 print u'开始导入xytx_game数据库...'
-                #upackZip.ExecuteSql(zip_path)
+                upackZip.ExecuteSql(zip_path)
                 print u'导入完毕'
                 print u'开始将xytx_game数据库的game_account数据导入xytx_snapshort的game_account...'
                 #game_account.import_game_account(zip_path)
@@ -143,6 +145,6 @@ if __name__ == '__main__':
                 print u'导入完毕'
                 #main(zip_path)
 
-    
+        print 'Total:',time.time()-s
     
        
